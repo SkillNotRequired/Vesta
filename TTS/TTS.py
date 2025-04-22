@@ -69,7 +69,7 @@ def synthesize_text(text, voice_id):
 class DubApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("ElevenLabs Dub App")
+        self.root.title("Professional Text-To-Speech App")
         self.audio = None
         self.play_obj = None
         self.playing = False
