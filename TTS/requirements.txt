@@ -1,0 +1,9 @@
+numpy
+pydub
+sounddevice
+vosk
+simpleaudio
+tkinter
+cryptography
+Requests
+simpleaudio
