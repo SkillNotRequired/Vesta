@@ -24,9 +24,13 @@ except Exception as e:
 
 # === Allowed voice names ===
 ALLOWED_VOICES = [
-    "Gabe", "Andrew Garfield", "QOP", "Vash", "Voice Spirit",
+    "Mantis", "Venom", "Spider-Man", "Star-Lord", "Rocket Raccoon",
+    "Captain America", "Invisible Woman", "Scarlet Witch", "Iron Man",
+    "Emma Frost", "Doctor Strange", "Adam Warlock",
+    "Gabe", "Andrew Garfield", "Vash", "Void Spirit",
     "Halo", "Legion Commander", "Counter Strike", "Shaxx", "Glados", "DMZ Warzone"
 ]
+
 
 # === Fetch allowed voices from ElevenLabs ===
 def fetch_voices():
