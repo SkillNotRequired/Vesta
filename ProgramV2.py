@@ -10,15 +10,13 @@ import threading
 import time
 import re
 import random
-from playsound import playsound
+import os
 
-# Optional GPU info for Windows
 try:
     import wmi
 except ImportError:
     wmi = None
 
-# Optional network speed test
 try:
     import speedtest
 except ImportError:
@@ -27,22 +25,11 @@ except ImportError:
 def get_system_info():
     info = []
 
-    # ASCII Banner
-    banner = (
-        "   ____            _       ____                     \n"
-        "  / ___| _   _ ___| |_ ___|  _ \\ ___ _ __   ___ ___ \n"
-        " | |  _| | | / __| __/ _ \\ |_) / _ \\ '_ \\ / __/ _ \\\n"
-        " | |_| | |_| \\__ \\ ||  __/  __/  __/ | | | (_|  __/\n"
-        "  \\____|\\__,_|___/\\__\\___|_|   \\___|_| |_|\\___\\___|\n"
-    )
-    info.append(banner)
-
-    # System basics
     info.append("🔒 USER INFO")
     info.append(f"Username: {getpass.getuser()}")
     info.append(f"Computer Name: {platform.node()}")
 
-    info.append("\n🖥 SYSTEM INFO")
+    info.append("\n💥 SYSTEM INFO")
     info.append(f"OS: {platform.system()} {platform.release()} ({platform.version()})")
     info.append(f"CPU: {platform.processor()}")
     info.append(f"CPU Cores: {psutil.cpu_count(logical=False)} physical / {psutil.cpu_count()} logical")
@@ -53,12 +40,10 @@ def get_system_info():
     uptime_hours = uptime_sec / 3600
     info.append(f"Uptime: {uptime_str}")
 
-    # Fun system mood
     mood = "🍼 Just booted, still waking up..." if uptime_hours < 1 else (
         "🙂 Warmed up and cruising." if uptime_hours < 5 else "🔥 Been grinding. Respect the uptime!")
     info.append(f"System Mood: {mood}")
 
-    # GPU Info (Windows)
     if wmi:
         try:
             gpu = wmi.WMI().Win32_VideoController()[0]
@@ -68,7 +53,6 @@ def get_system_info():
     else:
         info.append("GPU: WMI not installed")
 
-    # Network
     info.append("\n🌐 NETWORK INFO")
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
@@ -77,7 +61,6 @@ def get_system_info():
     info.append(f"Local IP: {local_ip}")
     info.append(f"MAC Address: {mac}")
 
-    # Ping google.com 5 times
     try:
         system = platform.system()
         cmd = ["ping", "google.com", "-n", "5"] if system == "Windows" else ["ping", "google.com", "-c", "5"]
@@ -97,7 +80,6 @@ def get_system_info():
     except:
         info.append("Ping: Failed or not supported")
 
-    # Speed test
     if speedtest:
         try:
             st = speedtest.Speedtest()
@@ -111,15 +93,6 @@ def get_system_info():
     else:
         info.append("Speed test: Not installed")
 
-    # Visible network computers
-    try:
-        output = subprocess.check_output("net view", shell=True, universal_newlines=True)
-        visible = [line.strip() for line in output.splitlines() if line.startswith("\\\\")]
-        info.append("Visible Computers: " + (", ".join(visible) if visible else "None"))
-    except:
-        info.append("Visible Computers: Unsupported or none")
-
-    # Drives
     info.append("\n💾 DRIVES")
     for part in psutil.disk_partitions():
         try:
@@ -128,7 +101,6 @@ def get_system_info():
         except:
             continue
 
-    # Top processes
     info.append("\n⚙️ RUNNING PROCESSES (Top 5 by memory)")
     processes = sorted(psutil.process_iter(['pid', 'name', 'memory_info']),
                        key=lambda p: p.info['memory_info'].rss if p.info['memory_info'] else 0,
@@ -140,7 +112,6 @@ def get_system_info():
         except:
             pass
 
-    # Nerd quote
     quotes = [
         "“There are only two hard things in Computer Science: cache invalidation and naming things.”",
         "“It's not a bug – it's an undocumented feature.”",
@@ -155,29 +126,32 @@ def get_system_info():
     return "\n".join(info)
 
 def refresh_info():
-    output_box.delete("1.0", tk.END)
-    output_box.insert(tk.END, "Gathering info, please wait...\n")
-
     def collect():
         info = get_system_info()
-        output_box.delete("1.0", tk.END)
-        output_box.insert(tk.END, info)
-        try:
-            playsound("ding.mp3")
-        except:
-            pass  # silent if no sound
+        output_box.after(0, lambda: output_box.delete("1.0", tk.END))
+        output_box.after(0, lambda: output_box.insert(tk.END, info))
 
     threading.Thread(target=collect).start()
 
+def launch_game():
+    try:
+        game_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Game.py")
+        subprocess.Popen(["pythonw", game_path], shell=True)
+    except Exception as e:
+        output_box.insert(tk.END, f"\n❌ Failed to launch game: {e}\n")
+
 # GUI Setup
 root = tk.Tk()
-root.title("System Spyglass")
-root.geometry("700x700")
+root.title("ProgramV2")
+root.geometry("700x720")
 
 refresh_btn = tk.Button(root, text="🔄 Refresh Info", font=("Arial", 14), command=refresh_info)
-refresh_btn.pack(pady=10)
+refresh_btn.pack(pady=5)
 
-output_box = scrolledtext.ScrolledText(root, wrap=tk.WORD, font=("Courier", 10), width=90, height=35)
+game_btn = tk.Button(root, text="🕹 Launch Game", font=("Arial", 12), command=launch_game)
+game_btn.pack(pady=5)
+
+output_box = scrolledtext.ScrolledText(root, wrap=tk.WORD, font=("Courier", 10), width=90, height=34)
 output_box.pack(padx=10, pady=10)
 
 refresh_info()
