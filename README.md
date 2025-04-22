@@ -7,3 +7,6 @@ Python: Python 3.10.11 x64
 Git Version: 2.49.0.windows.1
 
 4-22-2025 - NIM: Added 2 weirdo programs. Information dump and game window moving game.
+
+4-22-2025 - NIM: Added (TTS) Text-To-Speech program in conjunction to my personal accounts to the TTS folder. 
+Use with caution...
