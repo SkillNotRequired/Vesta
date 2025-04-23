@@ -2,10 +2,10 @@ import tkinter as tk
 import time
 
 class ShakyBallApp:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Shake the Cup!")
-        self.canvas = tk.Canvas(root, width=400, height=400, bg="black")
+    def __init__(self, root2):
+        self.root2 = root2
+        self.root2.title("Shake the Cup!")
+        self.canvas = tk.Canvas(root2, width=400, height=400, bg="black")
         self.canvas.pack()
 
         self.ball = self.canvas.create_oval(180, 180, 220, 220, fill="red")
@@ -22,11 +22,11 @@ class ShakyBallApp:
         self.last_time = time.time()
         self.last_shake_check = time.time()
 
-        self.root.after(200, self.start_tracking)
+        self.root2.after(200, self.start_tracking)
 
     def start_tracking(self):
-        self.prev_root_x = self.root.winfo_x()
-        self.prev_root_y = self.root.winfo_y()
+        self.prev_root2_x = self.root2.winfo_x()
+        self.prev_root2_y = self.root2.winfo_y()
         self.update()
 
     def update(self):
@@ -35,12 +35,12 @@ class ShakyBallApp:
         self.last_time = now
 
         # Get window movement delta
-        current_x = self.root.winfo_x()
-        current_y = self.root.winfo_y()
-        dx = current_x - self.prev_root_x
-        dy = current_y - self.prev_root_y
-        self.prev_root_x = current_x
-        self.prev_root_y = current_y
+        current_x = self.root2.winfo_x()
+        current_y = self.root2.winfo_y()
+        dx = current_x - self.prev_root2_x
+        dy = current_y - self.prev_root2_y
+        self.prev_root2_x = current_x
+        self.prev_root2_y = current_y
 
         # Window velocity = acceleration applied to ball (reverse direction to simulate inertia)
         self.shake_force[0] = -dx * 0.5
@@ -84,10 +84,16 @@ class ShakyBallApp:
         x, y = self.ball_pos
         self.canvas.coords(self.ball, x - r, y - r, x + r, y + r)
 
-        self.root.after(16, self.update)
+        self.root2.after(16, self.update)
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    root.geometry("400x400")
-    app = ShakyBallApp(root)
-    root.mainloop()
+    root2 = tk.Tk()
+    root2.geometry("400x400")
+    app = ShakyBallApp(root2)
+    root2.mainloop()
+
+def game():
+	root2 = tk.Tk()
+	root2.geometry("400x400")
+	app = ShakyBallApp(root2)
+	root2.mainloop()
