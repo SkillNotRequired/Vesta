@@ -82,4 +82,8 @@ def surprise():
 	# Start the face animation
 	update_face()
 	
-	root1.mainloop()	
+	root1.mainloop()
+
+if __name__ == "__main__":
+	surprise()
+	root1.mainloop()
